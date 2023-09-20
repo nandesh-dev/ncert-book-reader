@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width,height=device-height, initial-scale=0.9" />
+    <title>Vite App</title>
+    <style>
+      @tailwind base;
+      @tailwind components;
+      @tailwind utilities;
+      
+      * {
+        margin: 0;
+        padding: 0;
+
+        appearance: none;
+
+        border: none;
+        outline: none;
+
+        background: none;
+        font-size: inherit;
+        font-family: inherit;
+        color: inherit;
+
+        box-sizing: border-box;
+      }
+
+      select::after{
+        display: none;
+      }
+    </style>
+  </head>
+  <body class="flex flex-col h-screen">
+    <header class="p-6 bg-gray-15">
+      <h1 class="text-xl font-medium text-white">NCERT Book Reader</h1>
+    </header>
+    <div class="flex flex-row h-full">
+      <aside class="h-full z-50 bg-gradient-to-b from-gray-13 to-30% to-gray-15 absolute sm:relative">
+        <section id="open-sidebar" class="block h-full p-6 overflow-hidden w-72">
+          <div class="flex flex-row justify-end">
+            <button onclick="toggleSideBar()">
+              <img src="/assets/menu.svg" width="20" alt="Menu">
+            </button>
+          </div>
+          <div class="flex flex-col gap-6 mt-6">
+            <!-- Search Bar -->
+            <section class="flex flex-col gap-2">
+              <span class="text-xl font-medium text-white" for="">Search</span>
+              <div class="flex flex-row overflow-hidden rounded outline outline-1 outline-gray-22">
+                <input class="w-full px-4 text-white" type="text">
+                <div class="flex items-center justify-center h-10 p-3 aspect-square bg-gray-22">
+                  <img src="/assets/search.svg" width="20" alt="Search for Books">
+                </div>
+              </div>
+            </section>
+            <!-- Class Selector -->
+            <section class="flex flex-col gap-2">
+              <span class="text-xl font-medium text-white" for="">Class</span>
+              <button class="flex flex-row items-center overflow-hidden rounded outline outline-1 outline-gray-22" onclick="toggleClassesVisibility()">
+                <span class="w-full px-4 text-left text-white" id="selected-class-text"></span>
+                <div class="flex items-center justify-center h-10 p-3 aspect-square bg-gray-22" >
+                  <img src="/assets/arrow.svg" width="10" alt="Search for Books">
+                </div>
+              </button>
+              <div class="flex flex-col w-full gap-2" id="class-container">
+                <button class="flex items-center h-10 px-4 text-white rounded outline outline-1 outline-gray-22" onclick="selectClass(0)"><span>Grade 1st</span></button>
+                <button class="flex items-center h-10 px-4 text-white rounded outline outline-1 outline-gray-22" onclick="selectClass(1)"><span>Grade 2nd</span></button>
+                <button class="flex items-center h-10 px-4 text-white rounded outline outline-1 outline-gray-22" onclick="selectClass(2)"><span>Grade 3rd</span></button>
+                <button class="flex items-center h-10 px-4 text-white rounded outline outline-1 outline-gray-22" onclick="selectClass(3)"><span>Grade 4th</span></button>
+                <button class="flex items-center h-10 px-4 text-white rounded outline outline-1 outline-gray-22" onclick="selectClass(4)"><span>Grade 5th</span></button>
+                <button class="flex items-center h-10 px-4 text-white rounded outline outline-1 outline-gray-22" onclick="selectClass(5)"><span>Grade 6th</span></button>
+                <div class="flex flex-row justify-end">
+                  <button class="flex items-center justify-center w-10 h-10 rounded bg-gray-22" onclick="switchClasses()">
+                    <img src="/assets/arrow.svg" class="-rotate-90" width="10" alt="Search for Books">
+                  </button>
+                </div>
+              </div>
+              <template id="classes-page-2">
+                <button class="flex items-center h-10 px-4 text-white rounded outline outline-1 outline-gray-22" onclick="selectClass(6)"><span>Grade 7th</span></button>
+                <button class="flex items-center h-10 px-4 text-white rounded outline outline-1 outline-gray-22" onclick="selectClass(7)"><span>Grade 8th</span></button>
+                <button class="flex items-center h-10 px-4 text-white rounded outline outline-1 outline-gray-22" onclick="selectClass(8)"><span>Grade 9th</span></button>
+                <button class="flex items-center h-10 px-4 text-white rounded outline outline-1 outline-gray-22" onclick="selectClass(9)"><span>Grade 10th</span></button>
+                <button class="flex items-center h-10 px-4 text-white rounded outline outline-1 outline-gray-22" onclick="selectClass(10)"><span>Grade 11th</span></button>
+                <button class="flex items-center h-10 px-4 text-white rounded outline outline-1 outline-gray-22" onclick="selectClass(11)"><span>Grade 12th</span></button>
+                <div class="flex flex-row flex-end">
+                  <button class="flex items-center justify-center w-10 h-10 rounded bg-gray-22" onclick="switchClasses()">
+                    <img src="/assets/arrow.svg" class="rotate-90" width="10" alt="Search for Books">
+                  </button>
+                </div>
+              </template>
+            </section>
+            <!-- Subject Selector -->
+            <section class="flex-col hidden gap-2" id="subject-selector-container">
+              <span class="text-xl font-medium text-white" >Subject</span>
+              <button class="flex flex-row items-center overflow-hidden rounded outline outline-1 outline-gray-22" onclick="toggleSubjectsVisibility()">
+                <span class="w-full px-4 text-left text-white" id="selected-subject-text"></span>
+                <div class="flex items-center justify-center h-10 p-3 aspect-square bg-gray-22" >
+                  <img src="/assets/arrow.svg" width="10" alt="Search for Books">
+                </div>
+              </button>
+              <div class="flex-col hidden w-full gap-2" id="subject-container">
+                <template id="subject-card">
+                  <button class="flex items-center h-10 px-4 text-white rounded outline outline-1 outline-gray-22" ><span></span></button>
+                </template>
+              </div>
+            </section>
+          </div>
+        </section>
+        <section id="close-sidebar" class="hidden h-full p-6">
+          <div class="flex flex-row justify-end">
+            <button onclick="toggleSideBar()">
+              <img src="/assets/menu.svg" width="20" alt="Menu">
+            </button>
+          </div>
+        </section>
+      </aside>
+      <main class="flex flex-col w-full h-full">
+        <div class="grid gap-6 ml-16 md:ml-0 grid-rows-[auto_1fr] w-full pt-10 pl-10 bg-gray-10">
+          <h2 class="text-2xl font-medium text-white">Books</h2>
+          <div class="flex flex-row w-full gap-4 overflow-x-scroll h-fit" id="books-selector">
+            <template class="" id="bookCover">
+              <div>
+                <div class="relative flex w-56 h-72">
+                  <div class="absolute w-58">
+                    <img class="w-56 h-72">     
+                  </div>
+                  <button class="flex items-center justify-center absolute bg-[rgba(0,0,0,0.5)] hover:opacity-0 ease-linear duration-300 h-full w-full">
+                    <p class="text-xl font-medium text-white"></p>
+                  </button>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+        <div class="grid gap-6 ml-16 md:ml-0 grid-rows-[auto_1fr] w-full h-full pt-10 pl-10 bg-gray-10">
+          <h2 class="text-2xl font-medium text-white">Chapter</h2>
+          <div class="flex flex-row w-full gap-4 overflow-x-scroll h-fit" id="chapter-selector">
+            <template class="" id="chapter-page">
+              <div class="">
+                <button class="flex items-center justify-center w-56 bg-green h-72">
+                  <span class="text-2xl font-bold text-white"></span>
+                </button>
+              </div>
+            </template>
+          </div>
+        </div>        
+      </main>
+    </div>
+    <script src="./data.js"></script>
+    <script>
+      const bookCoverTemplate = document.getElementById("bookCover").content
+      const booksSelectorDiv = document.getElementById('books-selector')
+      function displayBooks(gradeIndex, subjectIndex){
+        const { books } = data[gradeIndex].subjects[subjectIndex]
+        
+        booksSelectorDiv.innerHTML = ""
+        for (let book of books){
+          const id = book.code.split("=")[0]
+          
+          const bookCover = document.importNode(bookCoverTemplate, true)
+          const image = bookCover.querySelector('img')
+          const p = bookCover.querySelector('p')
+          const button = bookCover.querySelector('button')
+          image.src = `https://ncert.nic.in/textbook/pdf/${id}cc.jpg`
+          p.innerText = book.title.length > 10 ? book.title.replace(" ", "\n") : book.title
+          button.onclick = function(){
+            displayChapters(books.indexOf(book))
+          }
+          booksSelectorDiv.appendChild(bookCover)
+        }
+      }
+
+      const chapterPageTemplate = document.getElementById('chapter-page').content
+      const chapterSelectorDiv = document.getElementById('chapter-selector')
+      function displayChapters(bookIndex){
+          const book = data[selectedData.grade].subjects[selectedData.subject].books[bookIndex]
+          const id = book.code.split("=")[0]
+          const pages = parseInt(book.code.split("=")[1].split("-")[1])
+          
+          chapterSelectorDiv.innerHTML = ""
+          for(let p = 0; p < pages; p++){
+            const chapterPage = document.importNode(chapterPageTemplate, true)
+            const span = chapterPage.querySelector('span')
+            span.innerText = `Chapter: ${p}`
+            chapterSelectorDiv.appendChild(chapterPage)
+          }
+      }
+    </script>
+    <script>
+      //Data variable containes all the meta data about the classes, subjects and books.
+      console.log(data)
+      const selectedData = {
+        grade: -1,
+        subject: -1
+      }
+
+
+      //Sidebar toggle
+      const openSidebarDiv = document.getElementById("open-sidebar")
+      const closeSidebarDiv = document.getElementById("close-sidebar")
+
+      function toggleSideBar(){
+        openSidebarDiv.style.display = openSidebarDiv.style.display === "none" ? "block" : "none"
+        closeSidebarDiv.style.display = closeSidebarDiv.style.display === "block" ? "none" : "block"
+      }
+
+      //Class Selector Dropdown toggle
+      const classContainerDiv = document.getElementById("class-container")
+      function toggleClassesVisibility(){
+        classContainerDiv.style.display = classContainerDiv.style.display === "none" ? "flex" : "none"
+      }
+
+      let oldClassesInnerHTML = document.getElementById("classes-page-2").cloneNode(true).innerHTML
+      function switchClasses(){
+        const newInnerHTML = classContainerDiv.innerHTML
+        classContainerDiv.innerHTML = oldClassesInnerHTML
+        oldClassesInnerHTML = newInnerHTML
+      }
+
+      const subjectSelectorContainer = document.getElementById('subject-selector-container')
+
+      const selectedClassTextDiv = document.getElementById("selected-class-text")
+      function selectClass(gradeIndex){
+        selectedData.grade = gradeIndex
+        selectedClassTextDiv.innerText = data[gradeIndex].grade
+        toggleClassesVisibility()
+        subjectSelectorContainer.style.display = "flex"
+
+        toggleSubjectsVisibility()
+      }
+
+      const subjectContainerDiv = document.getElementById("subject-container")
+      const subjectCardTemplate = document.getElementById("subject-card").content
+      function toggleSubjectsVisibility(){
+        subjectContainerDiv.innerHTML = ""
+        for(let subjectIndex in data[selectedData.grade].subjects){
+          const subject = data[selectedData.grade].subjects[subjectIndex]
+          const card = document.importNode(subjectCardTemplate, true)
+          const button = card.querySelector('button')
+          const span = card.querySelector('span')
+          span.innerText = subject.name   
+          button.onclick = function(){
+            selectSubject(subjectIndex)
+          }
+          subjectContainerDiv.appendChild(card)
+        }
+        subjectContainerDiv.style.display = subjectContainerDiv.style.display === "flex" ? "none" : "flex"     
+      }
+
+      const selectedSubjectTextDiv = document.getElementById("selected-subject-text")
+      function selectSubject(subjectIndex){
+        selectedData.subject = subjectIndex
+        selectedSubjectTextDiv.innerText = data[selectedData.grade].subjects[subjectIndex].name
+
+        toggleSubjectsVisibility()
+        displayBooks(selectedData.grade, subjectIndex)
+      }
+
+    </script>
+  </body>
+</html>
